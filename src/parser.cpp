@@ -2,6 +2,7 @@
 #include <list>
 #include <stdexcept>
 #include <string>
+#include <tuple>
 
 #include "parser.hpp"
 
@@ -28,9 +29,9 @@ static std::string trim_string(const std::string& str) {
   return str.substr(start, str.size() - start - end);
 }
 
-XMLNode parse_xml(const std::string& xml) {
+std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
   if (xml.empty()) {
-    return XMLNode("");
+    return {XMLNode(""), true};
   }
 
   if (xml[0] != '<' || xml[1] == '/') {
@@ -40,6 +41,7 @@ XMLNode parse_xml(const std::string& xml) {
 
   XMLNode root = XMLNode("ROOT");
   XMLNode* current_node = &root;
+  bool is_valid = true;
 
   for (std::string::size_type i = 0; i < xml.size(); i++) {
     // Check for opening tag
@@ -56,7 +58,12 @@ XMLNode parse_xml(const std::string& xml) {
     else if (xml[i] == '<' && xml[i + 1] == '/') {
       // Assume that the closing tag is the same as the opening tag.
       // This is done to fix misplaced closing tags.
-      i = xml.find('>', i);
+      const std::string::size_type j = xml.find('>', i);
+      const std::string tag = xml.substr(i + 2, j - i - 2);
+      if (current_node->tag_name != tag) {
+        is_valid = false;
+      }
+      i = j;
       current_node = current_node->parent;
     }
     // Check for content
@@ -67,5 +74,5 @@ XMLNode parse_xml(const std::string& xml) {
       current_node->content = content;
     }
   }
-  return root;
+  return {root, is_valid};
 }

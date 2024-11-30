@@ -3,6 +3,7 @@
 
 #include <list>
 #include <string>
+#include <tuple>
 #include <unordered_map>
 
 // Represents an XML node.
@@ -21,6 +22,6 @@ class XMLNode {
           const std::unordered_map<std::string, std::string>& attributes = {});
 };
 
-XMLNode parse_xml(const std::string& xml);
+std::tuple<XMLNode, bool> parse_xml(const std::string& xml);
 
 #endif
