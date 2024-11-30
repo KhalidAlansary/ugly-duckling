@@ -54,5 +54,6 @@ Ugly Duckling is a simple XML parser written in C++. It reads an XML file and pr
     ```sh
     cd ugly-duckling
     cmake -B build
-    ./build/bin/ugly-duckling
+    cd build
+    ./bin/ugly-duckling
     ```
