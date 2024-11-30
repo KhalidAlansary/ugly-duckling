@@ -9,16 +9,16 @@
 class XMLNode {
  public:
   const std::string tag_name;
-  XMLNode* parent;
-  const std::unordered_map<std::string, std::string> attributes;
+  XMLNode* const parent;
   std::list<XMLNode> children;
   std::string content;
+  const std::unordered_map<std::string, std::string> attributes;
 
   XMLNode(const std::string& tag_name,
           XMLNode* parent = nullptr,
-          const std::unordered_map<std::string, std::string>& attributes = {},
           const std::list<XMLNode>& children = {},
-          const std::string& content = "");
+          const std::string& content = "",
+          const std::unordered_map<std::string, std::string>& attributes = {});
 };
 
 XMLNode parse_xml(const std::string& xml);

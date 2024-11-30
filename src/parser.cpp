@@ -7,14 +7,14 @@
 
 XMLNode::XMLNode(const std::string& tag_name,
                  XMLNode* parent,
-                 const std::unordered_map<std::string, std::string>& attributes,
                  const std::list<XMLNode>& children,
-                 const std::string& content)
+                 const std::string& content,
+                 const std::unordered_map<std::string, std::string>& attributes)
     : tag_name(tag_name),
       parent(parent),
-      attributes(attributes),
       children(children),
-      content(content) {}
+      content(content),
+      attributes(attributes) {}
 
 static std::string trim_string(const std::string& str) {
   std::string::size_type start =
