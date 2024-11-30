@@ -32,12 +32,15 @@ XMLNode parse_xml(const std::string& xml) {
   if (xml.empty()) {
     return XMLNode("");
   }
+
   if (xml[0] != '<' || xml[1] == '/') {
     // Throw an exception if the first tag is a closing tag.
     throw std::invalid_argument("Cannot parse XML");
   }
+
   XMLNode root = XMLNode("ROOT");
   XMLNode* current_node = &root;
+
   for (std::string::size_type i = 0; i < xml.size(); i++) {
     // Check for opening tag
     if (xml[i] == '<' && xml[i + 1] != '/') {
