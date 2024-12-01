@@ -20,6 +20,8 @@ class XMLNode {
           const std::list<XMLNode>& children = {},
           const std::string& content = "",
           const std::unordered_map<std::string, std::string>& attributes = {});
+  std::string get_opening_tag() const;
+  std::string get_closing_tag() const;
 };
 
 std::tuple<XMLNode, bool> parse_xml(const std::string& xml);

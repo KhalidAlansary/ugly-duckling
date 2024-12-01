@@ -17,6 +17,15 @@ XMLNode::XMLNode(const std::string& tag_name,
       content(content),
       attributes(attributes) {}
 
+std::string XMLNode::get_opening_tag() const {
+  // TODO: Handle attributes
+  return "<" + tag_name + ">";
+}
+
+std::string XMLNode::get_closing_tag() const {
+  return "</" + tag_name + ">";
+}
+
 static std::string trim_string(const std::string& str) {
   std::string::size_type start =
       std::find_if(str.cbegin(), str.cend(),
