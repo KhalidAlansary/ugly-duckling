@@ -39,6 +39,10 @@ static std::string trim_string(const std::string& str) {
 }
 
 std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
+  // TODO: Handle comments
+  // TODO: Handle prolog
+  // TODO: Handle DTD
+  // TODO: Handle CDATA
   if (xml.empty()) {
     return {XMLNode(""), true};
   }
@@ -55,6 +59,11 @@ std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
   for (std::string::size_type i = 0; i < xml.size(); i++) {
     // Check for opening tag
     if (xml[i] == '<' && xml[i + 1] != '/') {
+      // If the current tag has content, then there is a missing closing tag.
+      if (!current_node->content.empty()) {
+        is_valid = false;
+        current_node = current_node->parent;
+      }
       // TODO: Parse attributes
       const std::string::size_type tag_close = xml.find('>', i);
       const std::string tag = xml.substr(i + 1, tag_close - i - 1);
