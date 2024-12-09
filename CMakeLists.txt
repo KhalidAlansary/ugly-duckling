@@ -11,4 +11,4 @@ aux_source_directory(src SRC)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_executable(ugly-duckling ${SRC})
+add_executable(xml_editor ${SRC})
