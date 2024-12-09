@@ -52,8 +52,9 @@ class XMLNode {
  * @brief Parses an XML string into an XMLNode tree.
  *
  * @param xml The XML string to parse.
- * @return A tuple containing the root XMLNode and a boolean indicating whether
- * the original string was valid.
+ * @return A tuple containing the dummy root XMLNode which has the rest of the
+ * XML as children and a boolean indicating whether the original string was
+ * valid.
  */
 std::tuple<XMLNode, bool> parse_xml(const std::string& xml);
 
