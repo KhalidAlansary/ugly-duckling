@@ -9,7 +9,7 @@ static const char* args_doc = "<command> [options]";
 struct argp_option options[] = {
     {"input", 'i', "FILE", 0, "Input XML file", 0},
     {"output", 'o', "FILE", 0, "Output file", 0},
-    {"fix", 'f', 0, 0, "Fix inconsistencies the XML file", 0},
+    {"fix", 'f', 0, 0, "Fix inconsistencies in the XML file", 0},
     {"ids", 's', "ID_LIST", 0, "IDs of the users", 0},
     {"id", 'd', "ID", 0, "ID of the user", 0},
     {"word", 'w', "WORD", 0, "Word to search", 0},
