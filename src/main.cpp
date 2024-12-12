@@ -1,8 +1,29 @@
 #include <argp.h>
 #include <cstdlib>
+#include <fstream>
+#include <iostream>
 #include <string>
 
-static const char* doc = "XML Parser -- A simple yet powerful XML utility.";
+#include "compresser.hpp"
+#include "formatter.hpp"
+#include "parser.hpp"
+
+// NOTE: Probably would be better to divide the program into subprograms. Each
+// with its own arguments parsing.
+static const char* doc =
+    "XML Parser -- A simple yet powerful XML utility.\n\n"
+    "Commands:\n"
+    "  verify            Verify the XML file\n"
+    "  format            Format the XML file\n"
+    "  json              Convert the XML file to JSON\n"
+    "  mini              Minify the XML file\n"
+    "  compress          Compress the XML file\n"
+    "  decompress        Decompress the XML file\n"
+    "  draw              Draw the XML file\n"
+    "  most_active       Write the most active username and id\n"
+    "  most_influential  Write the most influencer username and id\n"
+    "  mutual            Writes a list of the mutual users between users with "
+    "ids\n";
 
 static const char* args_doc = "<command> [options]";
 
@@ -61,7 +82,10 @@ static error_t parse_opt(int key, char* arg, struct argp_state* state) {
       arguments->command = arg;
       break;
     case ARGP_KEY_END:
-      // TODO: Check for required arguments.
+      if (arguments->command.empty()) {
+        argp_usage(state);
+      }
+      // NOTE: Better to check for required arguments here but whatever.
       break;
     default:
       return ARGP_ERR_UNKNOWN;
@@ -75,7 +99,69 @@ int main(int argc, char* argv[]) {
   struct arguments argz;
   argp_parse(&argp, argc, argv, 0, 0, &argz);
 
-  // TODO: Implement the logic.
+  if (argz.command == "verify") {
+    if (argz.input.empty()) {
+      std::cerr << "Error: Missing input file\n";
+      return EXIT_FAILURE;
+    }
+    if (argz.fix && argz.output.empty()) {
+      std::cerr << "Error: Missing output file\n";
+      return EXIT_FAILURE;
+    }
+    std::ifstream input_file(argz.input);
+    if (!input_file) {
+      std::cerr << "Error: Could not open input file\n";
+      return EXIT_FAILURE;
+    }
+    std::string input_xml((std::istreambuf_iterator<char>(input_file)),
+                          std::istreambuf_iterator<char>());
+    input_file.close();
+
+    std::tuple<XMLNode, bool> result = parse_xml(input_xml);
+    std::cout << (std::get<1>(result) ? "valid" : "invalid") << std::endl;
+    if (argz.fix) {
+      std::ofstream output_file(argz.output);
+      if (!output_file) {
+        std::cerr << "Error: Could not open output file\n";
+        return EXIT_FAILURE;
+      }
+      output_file << prettify(std::get<0>(result));
+      output_file.close();
+    }
+  } else if (argz.command == "compress") {
+    if (argz.input.empty()) {
+      std::cerr << "Error: Missing input file\n";
+      return EXIT_FAILURE;
+    }
+    if (argz.output.empty()) {
+      std::cerr << "Error: Missing output file\n";
+      return EXIT_FAILURE;
+    }
+    std::ifstream input_file(argz.input);
+    if (!input_file) {
+      std::cerr << "Error: Could not open input file\n";
+      return EXIT_FAILURE;
+    }
+    std::string input_xml((std::istreambuf_iterator<char>(input_file)),
+                          std::istreambuf_iterator<char>());
+    input_file.close();
+
+    std::tuple<XMLNode, bool> result = parse_xml(input_xml);
+    if (!std::get<1>(result)) {
+      std::cerr << "Error: Invalid XML file\n";
+      return EXIT_FAILURE;
+    }
+
+    std::string compressed = compress(std::get<0>(result));
+    std::ofstream output_file(argz.output);
+    if (!output_file) {
+      std::cerr << "Error: Could not open output file\n";
+      return EXIT_FAILURE;
+    }
+    output_file << compressed;
+    output_file.close();
+  }
+  // TODO: Implement the rest of the commands.
 
   return EXIT_SUCCESS;
 }
