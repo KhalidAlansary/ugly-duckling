@@ -9,16 +9,13 @@
 XMLNode::XMLNode(const std::string& tag_name,
                  XMLNode* parent,
                  const std::list<XMLNode>& children,
-                 const std::string& content,
-                 const std::unordered_map<std::string, std::string>& attributes)
+                 const std::string& content)
     : tag_name(tag_name),
       parent(parent),
       children(children),
-      content(content),
-      attributes(attributes) {}
+      content(content) {}
 
 std::string XMLNode::get_opening_tag() const {
-  // TODO: Handle attributes
   return "<" + tag_name + ">";
 }
 
@@ -40,9 +37,6 @@ static std::string trim_string(const std::string& str) {
 
 std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
   // TODO: Handle comments
-  // TODO: Handle prolog
-  // TODO: Handle DTD
-  // TODO: Handle CDATA
   if (xml.empty()) {
     return {XMLNode(""), true};
   }
@@ -64,7 +58,6 @@ std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
         is_valid = false;
         current_node = current_node->parent;
       }
-      // TODO: Parse attributes
       const std::string::size_type tag_close = xml.find('>', i);
       const std::string tag = xml.substr(i + 1, tag_close - i - 1);
       i = tag_close;
