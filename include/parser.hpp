@@ -4,7 +4,6 @@
 #include <list>
 #include <string>
 #include <tuple>
-#include <unordered_map>
 
 /**
  * @brief Constructs an XMLNode.
@@ -13,7 +12,6 @@
  * @param parent The parent node (optional).
  * @param children The list of child nodes (optional).
  * @param content The content of the node (optional).
- * @param attributes The attributes of the node (optional).
  */
 class XMLNode {
  public:
@@ -21,13 +19,11 @@ class XMLNode {
   XMLNode* const parent;
   std::list<XMLNode> children;
   std::string content;
-  const std::unordered_map<std::string, std::string> attributes;
 
   XMLNode(const std::string& tag_name,
           XMLNode* parent = nullptr,
           const std::list<XMLNode>& children = {},
-          const std::string& content = "",
-          const std::unordered_map<std::string, std::string>& attributes = {});
+          const std::string& content = "");
 
   /**
    * @brief Returns the opening tag in angle brackets.
