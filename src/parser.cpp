@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <list>
-#include <stdexcept>
 #include <string>
 #include <tuple>
 
@@ -36,31 +35,16 @@ static std::string trim_string(const std::string& str) {
 }
 
 std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
-  // TODO: Handle comments
-  if (xml[0] != '<' || xml[1] == '/') {
-    // Throw an exception if the first tag is a closing tag.
-    throw std::invalid_argument("Cannot parse XML");
-  }
-
   XMLNode root = XMLNode("ROOT");
   XMLNode* current_node = &root;
   bool is_valid = true;
 
   std::string::size_type i = 0;
   while (i < xml.size()) {
-    // Check for opening tag
-    if (xml[i] == '<' && xml[i + 1] != '/') {
-      // If the current tag has content, then there is a missing closing tag.
-      if (!current_node->content.empty()) {
-        is_valid = false;
-        current_node = current_node->parent;
-      }
-      const std::string::size_type tag_close = xml.find('>', i);
-      const std::string tag = xml.substr(i + 1, tag_close - i - 1);
-      i = tag_close + 1;
-      // Add new node to children of current node.
-      current_node->children.emplace_back(tag, current_node);
-      current_node = &current_node->children.back();
+    // Check for comment
+    if (xml[i] == '<' && xml[i + 1] == '!' && xml[i + 2] == '-' &&
+        xml[i + 3] == '-') {
+      // TODO: Handle comments
     }
     // Check for closing tag
     else if (xml[i] == '<' && xml[i + 1] == '/') {
@@ -73,6 +57,20 @@ std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
       }
       i = j + 1;
       current_node = current_node->parent;
+    }
+    // Check for opening tag
+    else if (xml[i] == '<') {
+      // If the current tag has content, then there is a missing closing tag.
+      if (!current_node->content.empty()) {
+        is_valid = false;
+        current_node = current_node->parent;
+      }
+      const std::string::size_type tag_close = xml.find('>', i);
+      const std::string tag = xml.substr(i + 1, tag_close - i - 1);
+      i = tag_close + 1;
+      // Add new node to children of current node.
+      current_node->children.emplace_back(tag, current_node);
+      current_node = &current_node->children.back();
     }
     // Check for content
     else {
