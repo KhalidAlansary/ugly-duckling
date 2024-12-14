@@ -46,7 +46,8 @@ std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
   XMLNode* current_node = &root;
   bool is_valid = true;
 
-  for (std::string::size_type i = 0; i < xml.size(); i++) {
+  std::string::size_type i = 0;
+  while (i < xml.size()) {
     // Check for opening tag
     if (xml[i] == '<' && xml[i + 1] != '/') {
       // If the current tag has content, then there is a missing closing tag.
@@ -56,7 +57,7 @@ std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
       }
       const std::string::size_type tag_close = xml.find('>', i);
       const std::string tag = xml.substr(i + 1, tag_close - i - 1);
-      i = tag_close;
+      i = tag_close + 1;
       // Add new node to children of current node.
       current_node->children.emplace_back(tag, current_node);
       current_node = &current_node->children.back();
@@ -70,14 +71,14 @@ std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
       if (current_node->tag_name != tag) {
         is_valid = false;
       }
-      i = j;
+      i = j + 1;
       current_node = current_node->parent;
     }
     // Check for content
     else {
       const std::string::size_type content_end = xml.find('<', i);
       const std::string content = trim_string(xml.substr(i, content_end - i));
-      i = content_end - 1;
+      i = content_end;
       current_node->content = content;
     }
   }
