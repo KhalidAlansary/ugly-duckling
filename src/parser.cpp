@@ -37,10 +37,6 @@ static std::string trim_string(const std::string& str) {
 
 std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
   // TODO: Handle comments
-  if (xml.empty()) {
-    return {XMLNode(""), true};
-  }
-
   if (xml[0] != '<' || xml[1] == '/') {
     // Throw an exception if the first tag is a closing tag.
     throw std::invalid_argument("Cannot parse XML");
@@ -84,6 +80,10 @@ std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
       i = content_end - 1;
       current_node->content = content;
     }
+  }
+
+  if (root.children.size() > 1) {
+    is_valid = false;
   }
   return {root, is_valid};
 }
