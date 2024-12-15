@@ -11,6 +11,6 @@
  * @param root The dummy root node of the XML tree.
  * @return The minified XML tree without spaces or newlines.
  */
-std::string minify(const XMLNode& root);
+std::string minify(const ElementNode& root);
 
 #endif
