@@ -29,14 +29,14 @@ Ugly Duckling is a simple XML parser written in C++. It reads an XML file and pr
 1. Install the necessary development tools:
    ```sh
    sudo apt-get update
-   sudo apt-get install build-essential cmake
+   sudo apt-get install build-essential cmake libboost-all-dev
    ```
 
 #### Arch-based systems
 
 1. Install the necessary development tools:
    ```sh
-   sudo pacman -Syu base-devel cmake
+   sudo pacman -Syu base-devel cmake boost
    ```
 
 ### Windows
@@ -47,7 +47,7 @@ Ugly Duckling is a simple XML parser written in C++. It reads an XML file and pr
    ```
 2. Open the MSYS2 UCRT64 shell and install the necessary packages:
    ```sh
-   pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
+   pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-boost
    ```
 
 ## How to Clone and Build

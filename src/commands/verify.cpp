@@ -1,97 +1,78 @@
-#include <argp.h>
-#include <cstdlib>
+#include <boost/program_options.hpp>
 #include <fstream>
 #include <iostream>
 #include <string>
 
 #include "parser.hpp"
 
-static const char* doc = "Verify the XML file and optionally fix it";
-
-static struct argp_option options[] = {
-    {"input", 'i', "FILE", 0, "Input XML file", 0},
-    {"output", 'o', "FILE", 0, "Output file", 0},
-    {"fix", 'f', 0, 0, "Fix inconsistencies in the XML file", 0},
-    {0, 0, 0, 0, 0, 0},
-};
-
-struct arguments {
-  std::string input = "";
-  std::string output = "";
-  bool fix = false;
-};
-
-static error_t parse_opt(int key, char* arg, struct argp_state* state) {
-  struct arguments* arguments = static_cast<struct arguments*>(state->input);
-
-  switch (key) {
-    case 'i':
-      arguments->input = arg;
-      break;
-    case 'o':
-      arguments->output = arg;
-      break;
-    case 'f':
-      arguments->fix = true;
-      break;
-    case ARGP_KEY_ARG:
-      std::cerr << "Error: Invalid argument\n";
-      argp_usage(state);
-      break;
-    case ARGP_KEY_END:
-      if (arguments->input.empty()) {
-        std::cerr << "Error: Missing input file\n";
-        argp_usage(state);
-      }
-      if (arguments->output.empty() == arguments->fix) {
-        std::cerr << "fix and output must be used together\n";
-        argp_usage(state);
-      }
-      break;
-    default:
-      return ARGP_ERR_UNKNOWN;
-  }
-  return 0;
-}
-
-static struct argp argp = {options, parse_opt, 0, doc, 0, 0, 0};
+namespace po = boost::program_options;
 
 int verify(int argc, char* argv[]) {
-  struct arguments argz;
-  argp_parse(&argp, argc, argv, 0, 0, &argz);
+  try {
+    std::string input_file;
+    std::string output_file;
+    bool fix = false;
 
-  std::ifstream input(argz.input);
-  if (!input.is_open()) {
-    std::cerr << "Error: Could not open input file\n";
-    return EXIT_FAILURE;
-  }
-  std::ofstream output;
-  if (!argz.output.empty()) {
-    output.open(argz.output);
-    if (!output.is_open()) {
-      std::cerr << "Error: Could not open output file\n";
+    po::options_description desc("Verify options");
+    desc.add_options()("help", "Show this help message")(
+        "input,i", po::value<std::string>(&input_file)->required(),
+        "Input XML file")("output,o", po::value<std::string>(&output_file),
+                          "Output file")("fix,f", po::bool_switch(&fix),
+                                         "Fix inconsistencies in the XML file");
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+
+    if (vm.count("help")) {
+      std::cout << desc << "\n";
+      return EXIT_SUCCESS;
+    }
+
+    po::notify(vm);
+
+    if (output_file.empty() == fix) {
+      std::cerr << "fix and output must be used together\n";
+      std::cout << desc << "\n";
       return EXIT_FAILURE;
     }
-  }
 
-  std::string xml((std::istreambuf_iterator<char>(input)),
-                  std::istreambuf_iterator<char>());
+    std::ifstream input(input_file);
+    if (!input.is_open()) {
+      std::cerr << "Error: Could not open input file\n";
+      return EXIT_FAILURE;
+    }
 
-  input.close();
+    std::ofstream output;
+    if (!output_file.empty()) {
+      output.open(output_file);
+      if (!output.is_open()) {
+        std::cerr << "Error: Could not open output file\n";
+        return EXIT_FAILURE;
+      }
+    }
 
-  auto [root, is_valid] = parse_xml(xml);
+    std::string xml((std::istreambuf_iterator<char>(input)),
+                    std::istreambuf_iterator<char>());
 
-  std::cout << (is_valid ? "valid" : "invalid") << '\n';
+    input.close();
 
-  if (argz.fix) {
-    // TODO: Put the formatted representation of root into output
-    std::cerr << "Not yet implemented\n";
+    auto [root, is_valid] = parse_xml(xml);
+
+    std::cout << (is_valid ? "valid" : "invalid") << '\n';
+
+    if (fix) {
+      // TODO: Put the formatted representation of root into output
+      std::cerr << "Not yet implemented\n";
+      return EXIT_FAILURE;
+    }
+
+    if (output.is_open()) {
+      output.close();
+    }
+
+    return EXIT_SUCCESS;
+  } catch (std::exception& e) {
+    std::cerr << "Error: " << e.what() << "\n";
     return EXIT_FAILURE;
   }
-
-  if (output.is_open()) {
-    output.close();
-  }
-
-  return EXIT_SUCCESS;
 }
