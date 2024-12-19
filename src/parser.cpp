@@ -1,30 +1,27 @@
 #include <algorithm>
 #include <list>
-#include <stdexcept>
 #include <string>
 #include <tuple>
 
 #include "parser.hpp"
 
-XMLNode::XMLNode(const std::string& tag_name,
-                 XMLNode* parent,
-                 const std::list<XMLNode>& children,
-                 const std::string& content,
-                 const std::unordered_map<std::string, std::string>& attributes)
-    : tag_name(tag_name),
-      parent(parent),
-      children(children),
-      content(content),
-      attributes(attributes) {}
+Node::Node(ElementNode* parent) : parent(parent) {}
 
-std::string XMLNode::get_opening_tag() const {
-  // TODO: Handle attributes
-  return "<" + tag_name + ">";
-}
+XMLNode::XMLNode(const std::string& tag_name, ElementNode* parent)
+    : Node(parent), tag_name(tag_name) {}
 
-std::string XMLNode::get_closing_tag() const {
-  return "</" + tag_name + ">";
-}
+ElementNode::ElementNode(const std::string& tag_name,
+                         ElementNode* parent,
+                         const std::list<Node*>& children)
+    : XMLNode(tag_name, parent), children(children) {}
+
+LeafNode::LeafNode(const std::string& tag_name,
+                   ElementNode* parent,
+                   const std::string& content)
+    : XMLNode(tag_name, parent), content(content) {}
+
+CommentNode::CommentNode(const std::string& comment, ElementNode* parent)
+    : Node(parent), comment(comment) {}
 
 static std::string trim_string(const std::string& str) {
   std::string::size_type start =
@@ -38,50 +35,81 @@ static std::string trim_string(const std::string& str) {
   return str.substr(start, str.size() - start - end);
 }
 
-std::tuple<XMLNode, bool> parse_xml(const std::string& xml) {
-  if (xml.empty()) {
-    return {XMLNode(""), true};
-  }
-
-  if (xml[0] != '<' || xml[1] == '/') {
-    // Throw an exception if the first tag is a closing tag.
-    throw std::invalid_argument("Cannot parse XML");
-  }
-
-  XMLNode root = XMLNode("ROOT");
-  XMLNode* current_node = &root;
+std::tuple<ElementNode, bool> parse_xml(const std::string& xml) {
+  ElementNode root("ROOT", nullptr);
+  ElementNode* current = &root;
   bool is_valid = true;
-
-  for (std::string::size_type i = 0; i < xml.size(); i++) {
-    // Check for opening tag
-    if (xml[i] == '<' && xml[i + 1] != '/') {
-      // TODO: Parse attributes
-      const std::string::size_type tag_close = xml.find('>', i);
-      const std::string tag = xml.substr(i + 1, tag_close - i - 1);
-      i = tag_close;
-      // Add new node to children of current node.
-      current_node->children.emplace_back(tag, current_node);
-      current_node = &current_node->children.back();
-    }
-    // Check for closing tag
-    else if (xml[i] == '<' && xml[i + 1] == '/') {
-      // Assume that the closing tag is the same as the opening tag.
-      // This is done to fix misplaced closing tags.
-      const std::string::size_type j = xml.find('>', i);
-      const std::string tag = xml.substr(i + 2, j - i - 2);
-      if (current_node->tag_name != tag) {
+  std::string::size_type i = xml.find_first_of('<');
+  while (i != std::string::npos) {
+    // Comment
+    if (xml.substr(i + 1, 3) == "!--") {
+      const std::string::size_type comment_end = xml.find("-->", i + 4);
+      if (comment_end == std::string::npos) {
         is_valid = false;
       }
-      i = j;
-      current_node = current_node->parent;
+      const std::string comment =
+          trim_string(xml.substr(i + 4, comment_end - i - 4));
+      current->children.push_back(new CommentNode(comment, current));
+      i = comment_end + 3;
     }
-    // Check for content
+    // Closing tag
+    else if (xml[i + 1] == '/') {
+      const std::string::size_type tag_end = xml.find('>', i + 2);
+      if (tag_end == std::string::npos) {
+        is_valid = false;
+      }
+      const std::string tag_name =
+          trim_string(xml.substr(i + 2, tag_end - i - 2));
+      if (tag_name != current->tag_name) {
+        is_valid = false;
+        current->children.push_back(new LeafNode(tag_name, current));
+      }
+      current = current->parent;
+      i = tag_end + 1;
+    }
+    // Opening tag
     else {
-      const std::string::size_type content_end = xml.find('<', i);
-      const std::string content = trim_string(xml.substr(i, content_end - i));
-      i = content_end - 1;
-      current_node->content = content;
+      const std::string::size_type tag_end = xml.find('>', i + 1);
+      if (tag_end == std::string::npos) {
+        is_valid = false;
+      }
+      const std::string tag_name =
+          trim_string(xml.substr(i + 1, tag_end - i - 1));
+      const std::string::size_type content_end = xml.find('<', tag_end + 1) - 1;
+      if (content_end == std::string::npos) {
+        is_valid = false;
+      }
+      const std::string content =
+          trim_string(xml.substr(tag_end + 1, content_end - tag_end));
+      if (content.empty()) {
+        ElementNode* new_element = new ElementNode(tag_name, current);
+        current->children.push_back(new_element);
+        current = new_element;
+        i = content_end + 1;
+      } else {
+        current->children.push_back(new LeafNode(tag_name, current, content));
+        if (xml[content_end + 2] == '/') {
+          const std::string::size_type closing_tag_end =
+              xml.find('>', content_end + 2);
+          const std::string closing_tag_name = trim_string(
+              xml.substr(content_end + 3, closing_tag_end - content_end - 3));
+          if (closing_tag_name != tag_name) {
+            is_valid = false;
+            current->children.push_back(
+                new LeafNode(closing_tag_name, current));
+          }
+          i = closing_tag_end + 1;
+        } else {
+          is_valid = false;
+          i = content_end + 1;
+        }
+      }
     }
+    i = xml.find_first_of('<', i);
+  }
+
+  if (root.children.size() != 1) {
+    is_valid = false;
   }
   return {root, is_valid};
 }
