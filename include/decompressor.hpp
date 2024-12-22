@@ -10,7 +10,7 @@
  * @param compressed The compressed string.
  * @return The decompressed string.
  */
-std::string decompress(const std::string& compressed);
+std::tuple<ElementNode, bool> decompress(const std::string& compressed);
 
 /**
  * @brief Command-line decompression function.
