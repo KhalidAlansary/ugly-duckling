@@ -4,6 +4,7 @@
 #include <string>
 #include "parser.hpp"
 #include <vector>
+#include "minifier.hpp"
 /**
  * @brief Decompress a compressed string to a decompressed string.
  *

@@ -96,8 +96,8 @@ int decompress(int argc, char* argv[]) {
         input.close();
 
         // Generate the decompressed string
-        std::string decompressed = decompress(compressed);
-
+         auto [decompressed_root, decompressed_valid]  = decompress(compressed);
+         std::string decompressed_minified = minify(decompressed_root);
         // Open the output file
         std::ofstream output(output_file);
         if (!output.is_open()) {
@@ -106,7 +106,7 @@ int decompress(int argc, char* argv[]) {
         }
 
         // Write the decompressed string to the output file
-        output << decompressed;
+        output << decompressed_minified;
         output.close();
 
         std::cout << "Decompression successful. Output saved to " << output_file << "\n";
