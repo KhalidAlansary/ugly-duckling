@@ -52,7 +52,7 @@ std::string expand_tags(const std::string& compressed_xml) {
  * @param compressed_xml The compressed XML string.
  * @return The XML tree as a tuple (root node, valid flag).
  */
-std::tuple<ElementNode, bool> decompressor(const std::string& compressed_xml) {
+std::tuple<ElementNode, bool> decompress(const std::string& compressed_xml) {
     // Step 1: Expand the short tags back to full tags
     std::string expanded_xml = expand_tags(compressed_xml);
 
