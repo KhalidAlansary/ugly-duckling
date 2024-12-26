@@ -11,8 +11,8 @@ namespace po = boost::program_options;
 static const std::unordered_map<std::string, int (*)(int, char**)> commands = {
     {"verify", verify},
     // TODO: Uncomment the following lines after implementing the functions
-     {"format", format},
-     {"json", json},
+    // {"format", format},
+    {"json", json},
     // {"mini", mini},
     // {"compress", compress},
     // {"decompress", decompress},

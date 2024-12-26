@@ -21,8 +21,7 @@ file(GLOB_RECURSE SOURCES src/*.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_executable(xml_editor ${SOURCES}
-        converter.cpp)
+add_executable(xml_editor ${SOURCES})
 target_link_libraries(
   xml_editor PRIVATE ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY}
                      ${Boost_PROGRAM_OPTIONS_LIBRARY})
