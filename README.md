@@ -2,7 +2,7 @@
 
 ## Overview
 
-Ugly Duckling is a simple XML parser written in C++. It reads an XML file and prints the XML tree using BFS.
+Ugly Duckling is a simple yet powerful multipurpose XML utility written in C++.
 
 ## Features
 
@@ -49,6 +49,10 @@ Ugly Duckling is a simple XML parser written in C++. It reads an XML file and pr
    ```sh
    pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-boost
    ```
+3. Open PowerShell as adminstrator and add the MSYS2 UCRT64 bin directory to the system PATH (This may vary depending on where you installed MSYS2):
+   ```powershell
+   [System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\msys64\mingw64\bin", [System.EnvironmentVariableTarget]::Machine)
+   ```
 
 ## How to Clone and Build
 
@@ -60,7 +64,7 @@ Ugly Duckling is a simple XML parser written in C++. It reads an XML file and pr
    ```sh
    cd ugly-duckling
    cmake -B build
-   cd build
-   ./bin/ugly-duckling
+   make -C build
+   cd build/bin
+   ./xml_editor <command> [options]
    ```
-
