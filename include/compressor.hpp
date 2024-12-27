@@ -4,24 +4,43 @@
 #include <string>
 #include "parser.hpp"
 #include <vector>
-/**
- * @brief Compress an XML tree to a compressed string.
- *
- * @param root The root of the XML tree.
- * @return The compressed string.
- */
-std::string compress(const ElementNode& root);
+#include <functional>
+#include <sstream>
+#include "minifier.hpp"
+#include <boost/program_options.hpp>
+#include <fstream>
+#include <iostream>
+namespace po = boost::program_options;
 
 /**
- * @brief Command-line compression function.
+ * @brief Compresses the input XML string.
  *
- * Compresses an XML file specified via command-line arguments and saves the
- * compressed result in the specified output file.
+ * This function parses the XML string into a tree, compresses the tags, 
+ * and then minifies the resulting tree back into a string.
  *
- * @param argc The argument count.
- * @param argv The argument vector.
- * @return int EXIT_SUCCESS on success, EXIT_FAILURE on failure.
+ * @param xml The XML string to be compressed.
+ * @return A compressed XML string.
  */
+
+std::string compress_xml(const std::string& xml);
+
+/**
+ * @brief Compresses the XML tree in place.
+ *
+ * This function modifies the provided tree by replacing tag names with compressed versions.
+ *
+ * @param root The root of the ElementNode tree.
+ */
+
+void compress_tree_in_place(ElementNode& root);
+
+/**
+ * @brief Main function to compress the XML from command-line arguments.
+ *
+ * This function reads the XML file specified in the command line arguments,
+ * compresses it, and prints the compressed result.
+ */
+
 int compress(int argc, char* argv[]);
 
 #endif

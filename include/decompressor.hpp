@@ -5,24 +5,44 @@
 #include "parser.hpp"
 #include <vector>
 #include "minifier.hpp"
-/**
- * @brief Decompress a compressed string to a decompressed string.
- *
- * @param compressed The compressed string.
- * @return The decompressed string.
- */
-std::tuple<ElementNode, bool> decompress(const std::string& compressed);
+#include <functional>
+#include <sstream>  
+#include <boost/program_options.hpp>
+#include <fstream>
+#include <iostream>
+#include "decompressor.hpp"
+namespace po = boost::program_options;
 
 /**
- * @brief Command-line decompression function.
+ * @brief Decompresses the input XML string.
  *
- * Decompresses a compressed file specified via command-line arguments and saves
- * the decompressed XML in the specified output file.
+ * This function parses the compressed XML string into a tree, decompresses the tags, 
+ * and then minifies the resulting tree back into a string.
  *
- * @param argc The argument count.
- * @param argv The argument vector.
- * @return int EXIT_SUCCESS on success, EXIT_FAILURE on failure.
+ * @param xml The XML string to be decompressed.
+ * @return A decompressed XML string.
  */
+
+std::string decompress_xml(const std::string& xml);
+
+/**
+ * @brief decompresses the XML tree in place.
+ *
+ * This function modifies the provided tree by replacing compresssed tag names with decompressed versions.
+ *
+ * @param root The root of the ElementNode tree.
+ */
+
+
+void decompress_tree_in_place(ElementNode& root);
+
+/**
+ * @brief Main function to compress the XML from command-line arguments.
+ *
+ * This function reads the compressed XML file specified in the command line arguments,
+ * decompresses it, and prints the decompressed result.
+ */
+
 int decompress(int argc, char* argv[]);
 
 #endif

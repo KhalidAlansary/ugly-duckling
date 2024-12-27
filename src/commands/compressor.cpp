@@ -1,62 +1,69 @@
 #include "compressor.hpp"
-#include <unordered_map>
-#include <sstream>
-#include "minifier.hpp"  
-#include <boost/program_options.hpp>
-#include <fstream>
-#include <iostream>
-namespace po = boost::program_options;
-
-/**
- * Compresses the minified XML string by replacing tag names with shorter ones.
- * @param minified_xml The minified XML string.
- * @return The compressed XML string with shorter tags.
- */
-std::string compress_tags(const std::string& minified_xml) {
 
 
-	std::vector<std::string> original_tags = {
-	        "posts", "post", "body", "topics", "topic",
-	        "followers", "follower", "id", "name", "user"
-	    };
+std::string compress_xml(const std::string& xml) {
+    // Step 1: Parse the XML string into a tree structure.
+    auto [root, valid] = parse_xml(xml);
 
-	    std::vector<std::string> compressed_tags = {
-	        "ps", "pt", "bd", "tp", "tpc",
-	        "flwrs", "flwr", "i", "nm", "usr"
-	    };
-    std::string compressed_xml = minified_xml;
+    // Check if the parsing was successful
+    if (!valid) {
+        return "";  
+    }
 
-    // Replace each tag in the string with the compressed version.
-    for (size_t i = 0; i < original_tags.size(); ++i) {
-            size_t pos = 0;
-            // Replace opening tags
-            while ((pos = compressed_xml.find("<" + original_tags[i] + ">", pos)) != std::string::npos) {
-                compressed_xml.replace(pos, original_tags[i].length() + 2, "<" + compressed_tags[i] + ">");
-                pos += compressed_tags[i].length() + 2; // Move past the replaced tag
-            }
+    // Step 2: Compress the tree in place.
+    compress_tree_in_place(root);
 
-            pos = 0;
-            // Replace closing tags
-            while ((pos = compressed_xml.find("</" + original_tags[i] + ">", pos)) != std::string::npos) {
-                compressed_xml.replace(pos, original_tags[i].length() + 3, "</" + compressed_tags[i] + ">");
-                pos += compressed_tags[i].length() + 3;
+    // Step 3: Minify the compressed tree back into a string.
+    return minify(root);
+}
+
+
+
+void compress_tree_in_place(ElementNode& root) {
+    // Define the list of original and compressed tags
+    std::vector<std::string> original_tags = {
+        "posts", "post", "body", "topics", "topic",
+        "followers", "follower", "id", "name", "user"
+    };
+
+    std::vector<std::string> compressed_tags = {
+        "ps", "pt", "bd", "tp", "tpc",
+        "flwrs", "flwr", "i", "nm", "usr"
+    };
+
+    // Helper function for recursive compression
+    std::function<void(ElementNode&)> helper = [&](ElementNode& node) {
+        // Compress the current node's tag name
+        for (size_t i = 0; i < original_tags.size(); ++i) {
+            if (node.tag_name == original_tags[i]) {
+                // Replace the tag name with its compressed version
+                const_cast<std::string&>(node.tag_name) = compressed_tags[i];
+                break;
             }
         }
 
-        return compressed_xml;
-    }
+        // Recursively compress all children
+        for (Node* child : node.children) {
+            // Check if the child is an ElementNode
+            if (ElementNode* element_child = dynamic_cast<ElementNode*>(child)) {
+                helper(*element_child);
+            } else if (LeafNode* leaf_child = dynamic_cast<LeafNode*>(child)) {
+                // Compress the tag name of the LeafNode
+                for (size_t i = 0; i < original_tags.size(); ++i) {
+                    if (leaf_child->tag_name == original_tags[i]) {
+                        const_cast<std::string&>(leaf_child->tag_name) = compressed_tags[i];
+                        break;
+                    }
+                }
+            }
+        }
+    };
 
-
-
-std::string compress(const ElementNode& root) {
-    // Step 1: Minify the XML tree into a string
-    std::string minified_xml = minify(root);
-
-    // Step 2: Compress the tag names in the minified XML string
-    std::string compressed_xml = compress_tags(minified_xml);
-
-    return compressed_xml;
+    // Start the compression process from the root
+    helper(root);
 }
+
+
 
 
 
@@ -93,16 +100,8 @@ int compress(int argc, char* argv[]) {
         std::string xml((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
         input.close();
 
-        // Parse the XML string into a tree
-        auto [root, is_valid] = parse_xml(xml);
-        if (!is_valid) {
-            std::cerr << "Error: Invalid XML file\n";
-            return EXIT_FAILURE;
-        }
-
-        // Generate the compressed string
-        std::string compressed = compress(root);
-
+        // Compress XML
+        std::string compressed= compress_xml(xml);
         // Open the output file
         std::ofstream output(output_file);
         if (!output.is_open()) {

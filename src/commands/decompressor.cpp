@@ -1,21 +1,26 @@
 
 #include "decompressor.hpp"
-#include <unordered_map>
-#include <sstream>
-#include "parser.hpp"  // Assuming parse_xml is declared here
-#include <boost/program_options.hpp>
-#include <fstream>
-#include <iostream>
-namespace po = boost::program_options;
 
 
-/**
- * Expands the compressed XML string by replacing short tags with the original ones.
- * @param compressed_xml The compressed XML string.
- * @return The expanded XML string with full tag names.
- */
-std::string expand_tags(const std::string& compressed_xml) {
-    // Define two parallel vectors: one for compressed tags and one for original tags
+std::string decompress_xml(const std::string& xml) {
+    // Step 1: Parse the XML string into a tree structure.
+    auto [root, valid] = parse_xml(xml);
+
+    // Check if the parsing was successful
+    if (!valid) {
+        return "";  
+    }
+    // Step 2: Compress the tree in place.
+    decompress_tree_in_place(root);
+
+    // Step 3: Minify the compressed tree back into a string.
+    return minify(root);
+}
+
+
+
+void decompress_tree_in_place(ElementNode& root) {
+    // Define the list of compressed and original tags
     std::vector<std::string> compressed_tags = {
         "ps", "pt", "bd", "tp", "tpc",
         "flwrs", "flwr", "i", "nm", "usr"
@@ -26,38 +31,36 @@ std::string expand_tags(const std::string& compressed_xml) {
         "followers", "follower", "id", "name", "user"
     };
 
-    std::string expanded_xml = compressed_xml;
-
-    // Loop through each compressed tag and replace it with the corresponding original tag
-    for (size_t i = 0; i < compressed_tags.size(); ++i) {
-        size_t pos = 0;
-        // Replace opening tags
-        while ((pos = expanded_xml.find("<" + compressed_tags[i] + ">", pos)) != std::string::npos) {
-            expanded_xml.replace(pos, compressed_tags[i].length() + 2, "<" + original_tags[i] + ">");
-            pos += original_tags[i].length() + 2; // Move past the replaced tag
+    // Helper function for recursive decompression
+    std::function<void(ElementNode&)> helper = [&](ElementNode& node) {
+        // Decompress the current node's tag name
+        for (size_t i = 0; i < compressed_tags.size(); ++i) {
+            if (node.tag_name == compressed_tags[i]) {
+                // Replace the tag name with its original version
+                const_cast<std::string&>(node.tag_name) = original_tags[i];
+                break;
+            }
         }
 
-        pos = 0;
-        // Replace closing tags
-        while ((pos = expanded_xml.find("</" + compressed_tags[i] + ">", pos)) != std::string::npos) {
-            expanded_xml.replace(pos, compressed_tags[i].length() + 3, "</" + original_tags[i] + ">");
-            pos += original_tags[i].length() + 3;
+        // Recursively decompress all children
+        for (Node* child : node.children) {
+            // Check if the child is an ElementNode
+            if (ElementNode* element_child = dynamic_cast<ElementNode*>(child)) {
+                helper(*element_child);
+            } else if (LeafNode* leaf_child = dynamic_cast<LeafNode*>(child)) {
+                // Decompress the tag name of the LeafNode
+                for (size_t i = 0; i < compressed_tags.size(); ++i) {
+                    if (leaf_child->tag_name == compressed_tags[i]) {
+                        const_cast<std::string&>(leaf_child->tag_name) = original_tags[i];
+                        break;
+                    }
+                }
+            }
         }
-    }
+    };
 
-    return expanded_xml;
-}
-/**
- * Decompress the compressed XML string by restoring the full tag names and parsing it.
- * @param compressed_xml The compressed XML string.
- * @return The XML tree as a tuple (root node, valid flag).
- */
-std::tuple<ElementNode, bool> decompress(const std::string& compressed_xml) {
-    // Step 1: Expand the short tags back to full tags
-    std::string expanded_xml = expand_tags(compressed_xml);
-
-    // Step 2: Parse the expanded XML string into an XML tree
-    return parse_xml(expanded_xml);
+    // Start the decompression process from the root
+    helper(root);
 }
 
 
@@ -96,8 +99,8 @@ int decompress(int argc, char* argv[]) {
         input.close();
 
         // Generate the decompressed string
-         auto [decompressed_root, decompressed_valid]  = decompress(compressed);
-         std::string decompressed_minified = minify(decompressed_root);
+        std::string decompressed = decompress_xml(compressed);
+        
         // Open the output file
         std::ofstream output(output_file);
         if (!output.is_open()) {
@@ -106,7 +109,7 @@ int decompress(int argc, char* argv[]) {
         }
 
         // Write the decompressed string to the output file
-        output << decompressed_minified;
+        output << decompressed;
         output.close();
 
         std::cout << "Decompression successful. Output saved to " << output_file << "\n";
