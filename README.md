@@ -27,7 +27,7 @@ Ugly Duckling is a simple yet powerful multipurpose XML utility written in C++.
 #### Ubuntu and Debian-based systems
 
 1. Install the necessary development tools:
-   ```sh
+   ```bash
    sudo apt-get update
    sudo apt-get install build-essential cmake libboost-all-dev
    ```
@@ -35,18 +35,18 @@ Ugly Duckling is a simple yet powerful multipurpose XML utility written in C++.
 #### Arch-based systems
 
 1. Install the necessary development tools:
-   ```sh
+   ```bash
    sudo pacman -Syu base-devel cmake boost
    ```
 
 ### Windows
 
 1. Open PowerShell and paste the following to install MSYS2:
-   ```sh
+   ```powershell
    winget install MSYS2.MSYS2 Kitware.CMake
    ```
 2. Open the MSYS2 UCRT64 shell and install the necessary packages:
-   ```sh
+   ```bash
    pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-boost
    ```
 3. Open PowerShell as adminstrator and add the MSYS2 UCRT64 bin directory to the system PATH (This may vary depending on where you installed MSYS2):
