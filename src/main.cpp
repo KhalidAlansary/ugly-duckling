@@ -13,7 +13,7 @@ static const std::unordered_map<std::string, int (*)(int, char**)> commands = {
     // TODO: Uncomment the following lines after implementing the functions
     {"format", format},
     {"json", json},
-    // {"mini", mini},
+    {"mini", mini},
     // {"compress", compress},
     // {"decompress", decompress},
     // {"draw", draw},
