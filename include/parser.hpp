@@ -33,7 +33,7 @@ class Node {
  */
 class XMLNode : public Node {
  public:
-  const std::string tag_name;
+  std::string tag_name;
 
   /**
    * @brief Constructs a new XMLNode.
