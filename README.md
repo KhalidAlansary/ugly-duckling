@@ -2,7 +2,16 @@
 
 ## Overview
 
-Ugly Duckling is a simple XML parser written in C++. It reads an XML file and prints the XML tree using BFS.
+Ugly Duckling is a simple yet powerful multipurpose XML utility written in C++.
+
+## Table of Contents
+
+- [Features](#features)
+- [Limitations](#limitations)
+- [Setup Development Environment](#setup-development-environment)
+  - [Linux](#linux)
+  - [Windows](#windows)
+- [How to Clone and Build](#how-to-clone-and-build)
 
 ## Features
 
@@ -13,12 +22,16 @@ Ugly Duckling is a simple XML parser written in C++. It reads an XML file and pr
 - Minifies XML by removing whitespace
 - Compresses and decompresses XML
 
-## Table of Contents
+## Limitations
 
-- [Setup Development Environment](#setup-development-environment)
-  - [Linux](#linux)
-  - [Windows](#windows)
-- [How to Clone and Build](#how-to-clone-and-build)
+Does not support the following:
+
+- XML namespaces
+- XML attributes
+- prolog and doctype
+- CDATA sections
+- self-closing tags
+- DTDs
 
 ## Setup Development Environment
 
@@ -27,7 +40,7 @@ Ugly Duckling is a simple XML parser written in C++. It reads an XML file and pr
 #### Ubuntu and Debian-based systems
 
 1. Install the necessary development tools:
-   ```sh
+   ```bash
    sudo apt-get update
    sudo apt-get install build-essential cmake libboost-all-dev
    ```
@@ -35,19 +48,23 @@ Ugly Duckling is a simple XML parser written in C++. It reads an XML file and pr
 #### Arch-based systems
 
 1. Install the necessary development tools:
-   ```sh
+   ```bash
    sudo pacman -Syu base-devel cmake boost
    ```
 
 ### Windows
 
 1. Open PowerShell and paste the following to install MSYS2:
-   ```sh
+   ```powershell
    winget install MSYS2.MSYS2 Kitware.CMake
    ```
 2. Open the MSYS2 UCRT64 shell and install the necessary packages:
-   ```sh
+   ```bash
    pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-boost
+   ```
+3. Open PowerShell as adminstrator and add the MSYS2 UCRT64 bin directory to the system PATH (This may vary depending on where you installed MSYS2):
+   ```powershell
+   [System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\msys64\mingw64\bin", [System.EnvironmentVariableTarget]::Machine)
    ```
 
 ## How to Clone and Build
@@ -60,7 +77,7 @@ Ugly Duckling is a simple XML parser written in C++. It reads an XML file and pr
    ```sh
    cd ugly-duckling
    cmake -B build
-   cd build
-   ./bin/ugly-duckling
+   make -C build
+   cd build/bin
+   ./xml_editor <command> [options]
    ```
-
