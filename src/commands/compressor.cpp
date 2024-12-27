@@ -40,7 +40,7 @@ void compress_tree_in_place(ElementNode& root) {
     for (size_t i = 0; i < original_tags.size(); ++i) {
       if (node.tag_name == original_tags[i]) {
         // Replace the tag name with its compressed version
-        const_cast<std::string&>(node.tag_name) = compressed_tags[i];
+        node.tag_name = compressed_tags[i];
         break;
       }
     }
@@ -54,7 +54,7 @@ void compress_tree_in_place(ElementNode& root) {
         // Compress the tag name of the LeafNode
         for (size_t i = 0; i < original_tags.size(); ++i) {
           if (leaf_child->tag_name == original_tags[i]) {
-            const_cast<std::string&>(leaf_child->tag_name) = compressed_tags[i];
+            leaf_child->tag_name = compressed_tags[i];
             break;
           }
         }
