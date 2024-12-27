@@ -1,9 +1,6 @@
 #include <boost/program_options.hpp>
 #include <fstream>
-#include <functional>
 #include <iostream>
-#include <sstream>
-#include <stdexcept>
 #include <string>
 
 #include "parser.hpp"
