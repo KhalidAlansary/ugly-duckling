@@ -4,6 +4,7 @@
 #include <string>
 
 #include "parser.hpp"
+#include "prettifier.hpp"
 
 namespace po = boost::program_options;
 
@@ -61,9 +62,7 @@ int verify(int argc, char* argv[]) {
     std::cout << (is_valid ? "valid" : "invalid") << '\n';
 
     if (fix) {
-      // TODO: Put the formatted representation of root into output
-      std::cerr << "Not yet implemented\n";
-      return EXIT_FAILURE;
+      output << prettify(root);
     }
 
     if (output.is_open()) {
