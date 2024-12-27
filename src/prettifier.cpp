@@ -2,8 +2,8 @@
 #include <sstream>
 #include <string>
 
-#include "prettifier.hpp"
 #include "parser.hpp"
+#include "prettifier.hpp"
 
 std::string prettify(const ElementNode& root) {
   std::function<void(const ElementNode&, int, std::ostringstream&)> helper =
