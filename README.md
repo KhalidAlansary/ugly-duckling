@@ -4,6 +4,15 @@
 
 Ugly Duckling is a simple yet powerful multipurpose XML utility written in C++.
 
+## Table of Contents
+
+- [Features](#features)
+- [Limitations](#limitations)
+- [Setup Development Environment](#setup-development-environment)
+  - [Linux](#linux)
+  - [Windows](#windows)
+- [How to Clone and Build](#how-to-clone-and-build)
+
 ## Features
 
 - Parses and validates XML files
@@ -13,12 +22,16 @@ Ugly Duckling is a simple yet powerful multipurpose XML utility written in C++.
 - Minifies XML by removing whitespace
 - Compresses and decompresses XML
 
-## Table of Contents
+## Limitations
 
-- [Setup Development Environment](#setup-development-environment)
-  - [Linux](#linux)
-  - [Windows](#windows)
-- [How to Clone and Build](#how-to-clone-and-build)
+Does not support the following:
+
+- XML namespaces
+- XML attributes
+- prolog and doctype
+- CDATA sections
+- self-closing tags
+- DTDs
 
 ## Setup Development Environment
 
