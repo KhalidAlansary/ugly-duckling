@@ -37,7 +37,11 @@ int main(int argc, char* argv[]) {
         "  most_active       Write the most active username and id\n"
         "  most_influential  Write the most influencer username and id\n"
         "  mutual            Writes a list of the mutual users between users "
-        "with ids");
+        "with ids\n"
+        "  suggest           Writes a list of suggested users for user with a "
+        "given id \n"
+        "  search            Writes a list of posts where the given word or "
+        "topic was mentioned ");
 
     po::positional_options_description p;
     p.add("command", 1);

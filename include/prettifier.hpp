@@ -1,5 +1,5 @@
-#ifndef FORMATTER_HPP
-#define FORMATTER_HPP
+#ifndef PRETTIFIER_HPP
+#define PRETTIFIER_HPP
 
 #include <string>
 
