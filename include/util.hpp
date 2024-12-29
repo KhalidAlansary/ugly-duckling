@@ -1,6 +1,8 @@
 #ifndef UTIL_HPP
 #define UTIL_HPP
+
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include "parser.hpp"
@@ -17,11 +19,11 @@ class User {
  public:
   const std::string id, name;
   const std::vector<Post> posts;
-  const std::vector<std::string> followers;
+  const std::unordered_set<std::string> followers;
   User(const std::string& id,
        const std::string& name,
        const std::vector<Post>& posts,
-       const std::vector<std::string>& followers)
+       const std::unordered_set<std::string>& followers)
       : id(id), name(name), posts(posts), followers(followers) {}
 };
 

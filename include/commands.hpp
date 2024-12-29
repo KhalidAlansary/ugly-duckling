@@ -7,6 +7,7 @@ int decompress(int argc, char* argv[]);
 int format(int argc, char* argv[]);
 int json(int argc, char* argv[]);
 int mini(int argc, char* argv[]);
+int suggest(int argc, char* argv[]);
 int search(int argc, char* argv[]);
 // TODO: Uncomment the following lines after implementing the functions
 // int draw(int argc, char* argv[]);
