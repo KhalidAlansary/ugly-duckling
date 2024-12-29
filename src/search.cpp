@@ -9,7 +9,8 @@
 #include "search.hpp"
 #include "util.hpp"
 
-std::vector<Post> word_search(const std::vector<User>& users, const std::string& keyword) {
+std::vector<Post> word_search(const std::vector<User>& users,
+                              const std::string& keyword) {
   std::vector<Post> matching_posts;
 
   for (const User& user : users) {
@@ -22,21 +23,20 @@ std::vector<Post> word_search(const std::vector<User>& users, const std::string&
 
   return matching_posts;
 }
-std::vector<Post> topic_search(const std::vector<User>& users, const std::string& keyword) {
-    std::vector<Post> matching_posts;
+std::vector<Post> topic_search(const std::vector<User>& users,
+                               const std::string& keyword) {
+  std::vector<Post> matching_posts;
 
-    for (const User& user : users) {
-        for (const Post& post : user.posts) {
-            for (const std::string& topic : post.topics) {
-                if (topic == keyword) {
-                    matching_posts.push_back(post);
-                    break; 
-                }
-            }
+  for (const User& user : users) {
+    for (const Post& post : user.posts) {
+      for (const std::string& topic : post.topics) {
+        if (topic == keyword) {
+          matching_posts.push_back(post);
+          break;
         }
+      }
     }
+  }
 
-    return matching_posts;
+  return matching_posts;
 }
-
-

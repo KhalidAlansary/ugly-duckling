@@ -18,7 +18,6 @@ static const std::unordered_map<std::string, int (*)(int, char**)> commands = {
     // {"most_influencer", most_influencer},
     // {"mutual", mutual},
     // {"suggest", suggest},
-  
 };
 
 int main(int argc, char* argv[]) {
