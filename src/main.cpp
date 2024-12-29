@@ -9,14 +9,14 @@
 namespace po = boost::program_options;
 
 static const std::unordered_map<std::string, int (*)(int, char**)> commands = {
-    {"verify", verify}, {"compress", compress}, {"decompress", decompress},
-    {"format", format}, {"json", json},         {"mini", mini},
+    {"verify", verify},   {"compress", compress}, {"decompress", decompress},
+    {"format", format},   {"json", json},         {"mini", mini},
+    {"suggest", suggest},
     // TODO: Uncomment the following lines after implementing the functions
     // {"draw", draw},
     // {"most_active", most_active},
     // {"most_influencer", most_influencer},
     // {"mutual", mutual},
-    // {"suggest", suggest},
     // {"search", search},
 };
 
