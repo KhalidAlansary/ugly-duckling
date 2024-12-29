@@ -62,7 +62,7 @@ int search(int argc, char* argv[]) {
     }
 
     for (const Post& post : posts) {
-        std::cout<<post.body<<std::endl;
+      std::cout << post.body << std::endl;
     }
 
     return EXIT_SUCCESS;

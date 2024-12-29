@@ -6,7 +6,7 @@
 
 #include "parser.hpp"
 
-
-std::vector<std::string> mutual(const ElementNode& root, const std::string& keyword);
+std::vector<std::string> mutual(const ElementNode& root,
+                                const std::string& keyword);
 
 #endif
