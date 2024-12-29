@@ -1,3 +1,6 @@
+#ifndef UTIL_HPP
+#define UTIL_HPP
+
 #include <string>
 #include <vector>
 
@@ -30,3 +33,5 @@ class User {
  * @return std::vector<User> The list of users.
  */
 std::vector<User> parse_users(const ElementNode& users_node);
+
+#endif
