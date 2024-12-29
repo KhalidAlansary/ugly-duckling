@@ -1,5 +1,6 @@
 #include <cassert>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include "parser.hpp"
@@ -56,9 +57,9 @@ static std::vector<Post> parse_posts(const ElementNode& posts_node) {
   return posts;
 }
 
-static std::vector<std::string> parse_followers(
+static std::unordered_set<std::string> parse_followers(
     const ElementNode& followers_node) {
-  std::vector<std::string> followers;
+  std::unordered_set<std::string> followers;
   followers.reserve(followers_node.children.size());
 
   for (const Node* follower_node : followers_node.children) {
@@ -69,7 +70,7 @@ static std::vector<std::string> parse_followers(
           if (const auto* follower_leaf =
                   dynamic_cast<const LeafNode*>(follower_child)) {
             if (follower_leaf->tag_name == "id") {
-              followers.push_back(follower_leaf->content);
+              followers.insert(follower_leaf->content);
             }
           }
         }
@@ -83,7 +84,7 @@ static std::vector<std::string> parse_followers(
 static User parse_user(const ElementNode& user_node) {
   std::string id, name;
   std::vector<Post> posts;
-  std::vector<std::string> followers;
+  std::unordered_set<std::string> followers;
   posts.reserve(user_node.children.size());
   followers.reserve(user_node.children.size());
 

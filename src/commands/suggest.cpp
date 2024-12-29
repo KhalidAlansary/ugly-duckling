@@ -45,7 +45,11 @@ int suggest(int argc, char* argv[]) {
     std::vector<User> users =
         parse_users(*dynamic_cast<ElementNode*>(root.children.front()));
 
-    std::cout << suggest(users, user_id) << std::endl;
+    std::unordered_set<std::string> suggestions = suggest(users, user_id);
+
+    for (const std::string& suggestion : suggestions) {
+      std::cout << "suggestions: " << suggestion << '\n';
+    }
 
     return EXIT_SUCCESS;
   } catch (const std::exception& e) {
