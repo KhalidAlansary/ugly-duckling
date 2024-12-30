@@ -60,7 +60,7 @@ Does not support the following:
    ```
 2. Open the MSYS2 UCRT64 shell and install the necessary packages:
    ```bash
-   pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-boost mingw-w64-ucrt-x86_64-graphviz
+   pacman -Syu --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-boost mingw-w64-ucrt-x86_64-graphviz
    ```
 3. Open PowerShell as adminstrator and add the MSYS2 UCRT64 bin directory to the system PATH (This may vary depending on where you installed MSYS2):
    ```powershell
