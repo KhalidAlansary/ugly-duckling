@@ -42,25 +42,25 @@ Does not support the following:
 1. Install the necessary development tools:
    ```bash
    sudo apt-get update
-   sudo apt-get install build-essential cmake libboost-all-dev
+   sudo apt-get install build-essential cmake libboost-all-dev graphviz
    ```
 
 #### Arch-based systems
 
 1. Install the necessary development tools:
    ```bash
-   sudo pacman -Syu base-devel cmake boost
+   sudo pacman -Syu base-devel cmake boost graphviz
    ```
 
 ### Windows
 
 1. Open PowerShell and paste the following to install MSYS2:
    ```powershell
-   winget install MSYS2.MSYS2 Kitware.CMake
+   winget install MSYS2.MSYS2 Kitware.CMake Graphviz.Graphviz
    ```
 2. Open the MSYS2 UCRT64 shell and install the necessary packages:
    ```bash
-   pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-boost
+   pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-boost mingw-w64-ucrt-x86_64-graphviz
    ```
 3. Open PowerShell as adminstrator and add the MSYS2 UCRT64 bin directory to the system PATH (This may vary depending on where you installed MSYS2):
    ```powershell
