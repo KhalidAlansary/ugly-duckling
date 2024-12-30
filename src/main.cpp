@@ -25,6 +25,9 @@ static const std::unordered_map<std::string, int (*)(int, char**)> commands = {
 };
 
 int main(int argc, char* argv[]) {
+  if (argc == 1) {
+    return GUI(argc, argv);
+  }
   try {
     po::options_description desc(
         "XML Parser -- A simple yet powerful XML utility");
