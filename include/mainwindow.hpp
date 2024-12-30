@@ -16,7 +16,13 @@ class MainWindow : public QMainWindow {
   MainWindow(QWidget* parent = nullptr);
   ~MainWindow();
 
+ private slots:
+
+  void on_chooseFile_clicked();
+
+  void on_outputFile_clicked();
+
  private:
   Ui::MainWindow* ui;
 };
-#endif  // MAINWINDOW_HPP
+#endif
