@@ -5,6 +5,8 @@
 #include "util.hpp"
 
 void draw(const std::vector<User>& users, const std::string& filename) {
+  const std::string image_extension =
+      filename.substr(filename.find_last_of(".") + 1);
   GVC_t* gvc = gvContext();
   Agraph_t* g = agopen(const_cast<char*>("G"), Agdirected, 0);
   for (const User& user : users) {
@@ -15,8 +17,8 @@ void draw(const std::vector<User>& users, const std::string& filename) {
       agedge(g, node, following_node, 0, 1);
     }
   }
-  FILE* fp = fopen(filename.c_str(), "w");
+  FILE* fp = fopen(filename.c_str(), "wb");
   gvLayout(gvc, g, "dot");
-  gvRender(gvc, g, "dot", fp);
+  gvRender(gvc, g, image_extension.c_str(), fp);
   fclose(fp);
 }
