@@ -14,7 +14,7 @@ void draw(const std::vector<User>& users, const std::string& filename) {
     for (const std::string& following : user.followers) {
       Agnode_t* following_node =
           agnode(g, const_cast<char*>(following.c_str()), 1);
-      agedge(g, node, following_node, 0, 1);
+      agedge(g, following_node, node, 0, 1);
     }
   }
   FILE* fp = fopen(filename.c_str(), "wb");
