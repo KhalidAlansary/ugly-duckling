@@ -47,6 +47,10 @@ int suggest(int argc, char* argv[]) {
 
     std::unordered_set<std::string> suggestions = suggest(users, user_id);
 
+    if (suggestions.empty()) {
+      std::cout << "No suggestions available for this user\n";
+    }
+
     for (const std::string& suggestion : suggestions) {
       std::cout << "suggestions: " << suggestion << '\n';
     }
