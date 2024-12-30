@@ -8,12 +8,15 @@
 std::unordered_set<std::string> suggest(const std::vector<User>& users,
                                         const std::string& user_id) {
   std::unordered_set<std::string> suggestions;
-  const std::unordered_set<std::string>* my_followers;
+  const std::unordered_set<std::string>* my_followers = nullptr;
   for (const User& user : users) {
     if (user.id == user_id) {
       my_followers = &user.followers;
       break;
     }
+  }
+  if (my_followers == nullptr) {
+    return suggestions;
   }
   for (const User& user : users) {
     if (my_followers->contains(user.id)) {
