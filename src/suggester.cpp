@@ -26,6 +26,8 @@ std::unordered_set<std::string> suggest(const std::vector<User>& users,
     }
   }
   suggestions.erase(user_id);
-  return suggestions.empty() ? std::unordered_set<std::string>{"No suggestions available for this user"}
-                             : suggestions;
+  return suggestions.empty()
+             ? std::unordered_set<
+                   std::string>{"No suggestions available for this user"}
+             : suggestions;
 }
