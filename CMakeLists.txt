@@ -7,13 +7,12 @@ set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 
-# Boost settings
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-# Find required Boost components
 find_package(Boost REQUIRED COMPONENTS system filesystem program_options)
+# TODO: add find_package for graphviz
 
 include_directories(include ${Boost_INCLUDE_DIRS})
 
