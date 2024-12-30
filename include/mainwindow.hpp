@@ -22,6 +22,10 @@ class MainWindow : public QMainWindow {
 
   void on_outputFile_clicked();
 
+  void on_command_currentTextChanged(const QString &arg1);
+
+  void on_submit_clicked();
+
  private:
   Ui::MainWindow* ui;
 };
