@@ -32,6 +32,8 @@ set(SOURCES
     src/draw.cpp
     src/main.cpp
     src/minifier.cpp
+    src/most_active.cpp
+    src/most_followed.cpp
     src/parser.cpp
     src/prettifier.cpp
     src/search.cpp
@@ -43,6 +45,8 @@ set(SOURCES
     src/commands/format.cpp
     src/commands/json.cpp
     src/commands/mini.cpp
+    src/commands/most_active.cpp
+    src/commands/most_influencer.cpp
     src/commands/search.cpp
     src/commands/suggest.cpp
     src/commands/verify.cpp
