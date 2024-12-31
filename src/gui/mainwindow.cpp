@@ -5,6 +5,8 @@
 
 #include "./ui_mainwindow.h"
 #include "mainwindow.hpp"
+#include "parser.hpp"
+#include "prettifier.hpp"
 
 extern const std::unordered_map<std::string, int (*)(int, char**)> commands;
 std::string command;
@@ -40,4 +42,29 @@ void MainWindow::on_command_currentTextChanged(const QString& arg1) {
   command = arg1.toStdString();
 }
 
-void MainWindow::on_submit_clicked() {}
+void MainWindow::on_submit_clicked() {
+  std::ifstream input(input_file);
+  if (!input.is_open()) {
+    std::cerr << "Error: Could not open input file\n";
+    return;
+  }
+
+  std::ofstream output(output_file);
+  if (!output.is_open()) {
+    std::cerr << "Error: Could not open output file\n";
+    return;
+  }
+
+  std::string xml((std::istreambuf_iterator<char>(input)),
+                  std::istreambuf_iterator<char>());
+
+  input.close();
+
+  auto [root, _] = parse_xml(xml);
+
+  std::string formatted_output = prettify(root);
+
+  output << formatted_output;
+
+  output.close();
+}
