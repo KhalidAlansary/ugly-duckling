@@ -20,9 +20,10 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 find_package(Boost REQUIRED COMPONENTS system filesystem program_options)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GVC REQUIRED IMPORTED_TARGET libgvc)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
-# TODO: add find_package for graphviz
 
 include_directories(include ${Boost_INCLUDE_DIRS})
 
