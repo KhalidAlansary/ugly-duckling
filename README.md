@@ -49,7 +49,7 @@ Does not support the following:
 
 1. Install the necessary development tools:
    ```bash
-   sudo pacman -Syu base-devel cmake boost graphviz
+   sudo pacman -Syu --needed base-devel cmake boost graphviz
    ```
 
 ### Windows
@@ -77,7 +77,7 @@ Does not support the following:
    ```sh
    cd ugly-duckling
    cmake -B build
-   make -C build
+   cmake --build build
    cd build/bin
    ./xml_editor <command> [options]
    ```
