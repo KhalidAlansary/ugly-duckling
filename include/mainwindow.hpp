@@ -17,16 +17,16 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  private slots:
-
   void on_chooseFile_clicked();
-
   void on_outputFile_clicked();
-
   void on_command_currentTextChanged(const QString &arg1);
-
   void on_submit_clicked();
 
  private:
   Ui::MainWindow* ui;
+  std::string command;
+  std::string input_file;
+  std::string output_file;
+  void executeCommand();
 };
 #endif

@@ -3,7 +3,9 @@
 
 #include "parser.hpp"
 
+#ifndef INDENTATION_SIZE
 #define INDENTATION_SIZE 2
+#endif
 #define MAX_LINE_LENGTH 80
 #define INDENTATION_CHAR ' '
 
