@@ -11,29 +11,32 @@ std::string convert(const ElementNode& root) {
                 std::ostringstream& oss) -> void {
     // Leaf Node
     if (auto leaf = dynamic_cast<const LeafNode*>(node)) {
-      oss << std::string(depth * INDENTATION_SIZE, INDENTATION_CHAR) << '\"'
-          << leaf->tag_name << "\": \"" << leaf->content << '\"';
+      oss << std::string(depth * JSON_INDENTATION_SIZE, JSON_INDENTATION_CHAR)
+          << '\"' << leaf->tag_name << "\": \"" << leaf->content << '\"';
     }
     // Element Node
     else if (auto element = dynamic_cast<const ElementNode*>(node)) {
-      oss << std::string(depth * INDENTATION_SIZE, INDENTATION_CHAR) << '\"'
-          << element->tag_name << "\": ";
+      oss << std::string(depth * JSON_INDENTATION_SIZE, JSON_INDENTATION_CHAR)
+          << '\"' << element->tag_name << "\": ";
       if (element->tag_name.back() == 's') {
         oss << '[';
         for (const auto& child : element->children) {
           oss << '\n'
-              << std::string((depth + 1) * INDENTATION_SIZE, INDENTATION_CHAR)
+              << std::string((depth + 1) * JSON_INDENTATION_SIZE,
+                             JSON_INDENTATION_CHAR)
               << "{\n";
           helper(child, depth + 2, oss);
           oss << '\n'
-              << std::string((depth + 1) * INDENTATION_SIZE, INDENTATION_CHAR)
+              << std::string((depth + 1) * JSON_INDENTATION_SIZE,
+                             JSON_INDENTATION_CHAR)
               << '}';
           if (child != element->children.back()) {
             oss << ',';
           }
         }
         oss << '\n'
-            << std::string(depth * INDENTATION_SIZE, INDENTATION_CHAR) << "]";
+            << std::string(depth * JSON_INDENTATION_SIZE, JSON_INDENTATION_CHAR)
+            << "]";
       } else {
         oss << '{';
         for (const auto& child : element->children) {
@@ -44,7 +47,8 @@ std::string convert(const ElementNode& root) {
           }
         }
         oss << "\n"
-            << std::string(depth * INDENTATION_SIZE, INDENTATION_CHAR) << "}";
+            << std::string(depth * JSON_INDENTATION_SIZE, JSON_INDENTATION_CHAR)
+            << "}";
         if (node != element->parent->children.back() &&
             element->parent->tag_name.back() != 's') {
           oss << ',';

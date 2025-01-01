@@ -42,14 +42,14 @@ Does not support the following:
 1. Install the necessary development tools:
    ```bash
    sudo apt-get update
-   sudo apt-get install build-essential cmake libboost-all-dev graphviz
+   sudo apt-get install build-essential cmake libboost-all-dev graphviz libgraphviz-dev qt6-base-dev libglu-dev
    ```
 
 #### Arch-based systems
 
 1. Install the necessary development tools:
    ```bash
-   sudo pacman -Syu --needed base-devel cmake boost graphviz
+   sudo pacman -Syu --needed base-devel cmake boost graphviz qt6
    ```
 
 ### Windows
@@ -60,7 +60,7 @@ Does not support the following:
    ```
 2. Open the MSYS2 UCRT64 shell and install the necessary packages:
    ```bash
-   pacman -Syu --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-boost mingw-w64-ucrt-x86_64-graphviz
+   pacman -Syu --needed base-devel mingw-w64-ucrt-x86_64-{toolchain,boost,graphviz,qt6}
    ```
 3. Open PowerShell as adminstrator and add the MSYS2 UCRT64 bin directory to the system PATH (This may vary depending on where you installed MSYS2):
    ```powershell

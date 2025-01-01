@@ -1,6 +1,7 @@
 #ifndef VERIFY_HPP
 #define VERIFY_HPP
 
+int GUI(int argc, char* argv[]);
 int verify(int argc, char* argv[]);
 int format(int argc, char* argv[]);
 int json(int argc, char* argv[]);

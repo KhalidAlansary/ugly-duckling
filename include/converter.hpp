@@ -3,9 +3,8 @@
 
 #include "parser.hpp"
 
-#define INDENTATION_SIZE 2
-#define MAX_LINE_LENGTH 80
-#define INDENTATION_CHAR ' '
+#define JSON_INDENTATION_SIZE 2
+#define JSON_INDENTATION_CHAR ' '
 
 /**
  * @brief Converts XML represented by tree into json
