@@ -1,10 +1,12 @@
 #include <QFileDialog>
+#include <boost/algorithm/string.hpp>
 #include <fstream>
 #include <iostream>
 #include <string>
 
 #include "./ui_mainwindow.h"
 #include "commands.hpp"
+#include "common.hpp"
 #include "compressor.hpp"
 #include "converter.hpp"
 #include "decompressor.hpp"
@@ -12,6 +14,8 @@
 #include "minifier.hpp"
 #include "parser.hpp"
 #include "prettifier.hpp"
+#include "search.hpp"
+#include "suggester.hpp"
 
 extern const std::unordered_map<std::string, int (*)(int, char**)> commands;
 std::string command;
@@ -76,8 +80,7 @@ void MainWindow::executeCommand() {
 
   // Prepare arguments based on the command
   std::vector<std::string> args = {command};
-  if (command == "most_active" || command == "most_influencer" ||
-      command == "mutual" || command == "suggest") {
+  if (command == "most_active" || command == "most_influencer") {
     args.push_back("-i");
     args.push_back(input_file);
     if (!user_input.empty()) {
@@ -128,14 +131,84 @@ void MainWindow::executeCommand() {
     result = most_active(argc, argv.data());
   } else if (command == "most_influencer") {
     result = most_influencer(argc, argv.data());
-  }
-  // else if (command == "mutual") {
-  //   result = mutual(argc, argv.data());
-  // }
-  else if (command == "suggest") {
-    result = suggest(argc, argv.data());
+  } else if (command == "mutual") {
+    std::ifstream input(input_file);
+    if (!input.is_open()) {
+      std::cerr << "Error: Could not open input file\n";
+      return;
+    }
+
+    std::string xml((std::istreambuf_iterator<char>(input)),
+                    std::istreambuf_iterator<char>());
+
+    input.close();
+
+    auto [root, _] = parse_xml(xml);
+    std::vector<User> users =
+        parse_users(*dynamic_cast<ElementNode*>(root.children.front()));
+
+    std::vector<std::string> ids;
+    boost::split(ids, ui->userInput->text().toStdString(),
+                 boost::is_any_of(","));
+
+    std::unordered_set<std::string> common_followers = common(users, ids);
+
+    if (common_followers.empty()) {
+      result = "No common followers found";
+    } else {
+      result = "Common followers ids:\n";
+      for (const std::string& follower : common_followers) {
+        result += follower + '\n';
+      }
+    }
+  } else if (command == "suggest") {
+    std::ifstream input(input_file);
+    if (!input.is_open()) {
+      std::cerr << "Error: Could not open input file\n";
+      return;
+    }
+
+    std::string xml((std::istreambuf_iterator<char>(input)),
+                    std::istreambuf_iterator<char>());
+
+    input.close();
+
+    auto [root, _] = parse_xml(xml);
+    std::vector<User> users =
+        parse_users(*dynamic_cast<ElementNode*>(root.children.front()));
+
+    std::unordered_set<std::string> suggestions =
+        suggest(users, ui->userInput->text().toStdString());
+
+    if (suggestions.empty()) {
+      result = "No suggestions available for this user";
+    } else {
+      result = "Suggestions:\n";
+      for (const std::string& suggestion : suggestions) {
+        result += suggestion + '\n';
+      }
+    }
   } else if (command == "search") {
-    result = search(argc, argv.data());
+    std::ifstream input(input_file);
+    if (!input.is_open()) {
+      std::cerr << "Error: Could not open input file\n";
+      return;
+    }
+
+    std::string xml((std::istreambuf_iterator<char>(input)),
+                    std::istreambuf_iterator<char>());
+
+    input.close();
+
+    auto [root, _] = parse_xml(xml);
+    std::vector<User> users =
+        parse_users(*dynamic_cast<ElementNode*>(root.children.front()));
+    std::vector<Post> posts =
+        word_search(users, ui->userInput->text().toStdString());
+
+    for (const Post& post : posts) {
+      result += post.body + "\n";
+    }
   } else if (command == "verify") {
     int verify_result = verify(argc, argv.data());
     result = (verify_result == 0) ? "valid" : "invalid";
