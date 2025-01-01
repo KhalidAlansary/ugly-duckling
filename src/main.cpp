@@ -20,8 +20,7 @@ static const std::unordered_map<std::string, int (*)(int, char**)> commands = {
     {"search", search},
     {"most_active", most_active},
     {"most_influencer", most_influencer},
-    // TODO: Uncomment the following lines after implementing the functions
-    // {"mutual", mutual},
+    {"mutual", mutual},
 };
 
 int main(int argc, char* argv[]) {
