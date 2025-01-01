@@ -5,6 +5,10 @@
 
 #include "parser.hpp"
 
+// WARNING: Memory leak
+// Use smart pointers to avoid memory leaks or create a function te free the
+// memory
+
 Node::Node(ElementNode* parent) : parent(parent) {}
 
 XMLNode::XMLNode(const std::string& tag_name, ElementNode* parent)

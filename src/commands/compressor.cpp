@@ -26,37 +26,30 @@ std::string compress_xml(const std::string& xml) {
 }
 
 void compress_tree_in_place(ElementNode& root) {
-  // Define the list of original and compressed tags
-  std::vector<std::string> original_tags = {
-      "posts",     "post",     "body", "topics", "topic",
-      "followers", "follower", "id",   "name",   "user"};
-
-  std::vector<std::string> compressed_tags = {
-      "ps", "pt", "bd", "tp", "tpc", "flwrs", "flwr", "i", "nm", "usr"};
+  // Define the mapping of original to compressed tags
+  std::unordered_map<std::string, std::string> tag_mapping = {
+      {"posts", "ps"},      {"post", "pt"},   {"body", "bd"},
+      {"topics", "tp"},     {"topic", "tpc"}, {"followers", "flwrs"},
+      {"follower", "flwr"}, {"id", "i"},      {"name", "nm"},
+      {"user", "usr"}};
 
   // Helper function for recursive compression
   std::function<void(ElementNode&)> helper = [&](ElementNode& node) {
     // Compress the current node's tag name
-    for (size_t i = 0; i < original_tags.size(); ++i) {
-      if (node.tag_name == original_tags[i]) {
-        // Replace the tag name with its compressed version
-        node.tag_name = compressed_tags[i];
-        break;
-      }
+    auto it = tag_mapping.find(node.tag_name);
+    if (it != tag_mapping.end()) {
+      node.tag_name = it->second;
     }
 
     // Recursively compress all children
     for (Node* child : node.children) {
-      // Check if the child is an ElementNode
       if (ElementNode* element_child = dynamic_cast<ElementNode*>(child)) {
         helper(*element_child);
       } else if (LeafNode* leaf_child = dynamic_cast<LeafNode*>(child)) {
         // Compress the tag name of the LeafNode
-        for (size_t i = 0; i < original_tags.size(); ++i) {
-          if (leaf_child->tag_name == original_tags[i]) {
-            leaf_child->tag_name = compressed_tags[i];
-            break;
-          }
+        auto it = tag_mapping.find(leaf_child->tag_name);
+        if (it != tag_mapping.end()) {
+          leaf_child->tag_name = it->second;
         }
       }
     }

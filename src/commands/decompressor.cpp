@@ -25,37 +25,30 @@ std::string decompress_xml(const std::string& xml) {
 }
 
 void decompress_tree_in_place(ElementNode& root) {
-  // Define the list of compressed and original tags
-  std::vector<std::string> compressed_tags = {
-      "ps", "pt", "bd", "tp", "tpc", "flwrs", "flwr", "i", "nm", "usr"};
-
-  std::vector<std::string> original_tags = {
-      "posts",     "post",     "body", "topics", "topic",
-      "followers", "follower", "id",   "name",   "user"};
+  // Define the mapping of compressed to original tags
+  static const std::unordered_map<std::string, std::string> tag_map = {
+      {"ps", "posts"},      {"pt", "post"},   {"bd", "body"},
+      {"tp", "topics"},     {"tpc", "topic"}, {"flwrs", "followers"},
+      {"flwr", "follower"}, {"i", "id"},      {"nm", "name"},
+      {"usr", "user"}};
 
   // Helper function for recursive decompression
   std::function<void(ElementNode&)> helper = [&](ElementNode& node) {
     // Decompress the current node's tag name
-    for (size_t i = 0; i < compressed_tags.size(); ++i) {
-      if (node.tag_name == compressed_tags[i]) {
-        // Replace the tag name with its original version
-        node.tag_name = original_tags[i];
-        break;
-      }
+    auto it = tag_map.find(node.tag_name);
+    if (it != tag_map.end()) {
+      node.tag_name = it->second;
     }
 
     // Recursively decompress all children
     for (Node* child : node.children) {
-      // Check if the child is an ElementNode
       if (ElementNode* element_child = dynamic_cast<ElementNode*>(child)) {
         helper(*element_child);
       } else if (LeafNode* leaf_child = dynamic_cast<LeafNode*>(child)) {
         // Decompress the tag name of the LeafNode
-        for (size_t i = 0; i < compressed_tags.size(); ++i) {
-          if (leaf_child->tag_name == compressed_tags[i]) {
-            leaf_child->tag_name = original_tags[i];
-            break;
-          }
+        auto leaf_it = tag_map.find(leaf_child->tag_name);
+        if (leaf_it != tag_map.end()) {
+          leaf_child->tag_name = leaf_it->second;
         }
       }
     }
