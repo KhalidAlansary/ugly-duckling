@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
         "  decompress        Decompress the XML file\n"
         "  draw              Draw the XML file\n"
         "  most_active       Write the user with most connections\n"
-        "  most_influential  Write the most followed username and id\n"
+        "  most_influencer  Write the most followed username and id\n"
         "  mutual            Writes a list of the mutual users between users "
         "with ids\n"
         "  suggest           Writes a list of suggested users for user with a "
