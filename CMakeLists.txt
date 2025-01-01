@@ -28,6 +28,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 include_directories(include ${Boost_INCLUDE_DIRS})
 
 set(SOURCES
+    src/common.cpp
     src/converter.cpp
     src/draw.cpp
     src/main.cpp
@@ -47,6 +48,7 @@ set(SOURCES
     src/commands/mini.cpp
     src/commands/most_active.cpp
     src/commands/most_influencer.cpp
+    src/commands/mutual.cpp
     src/commands/search.cpp
     src/commands/suggest.cpp
     src/commands/verify.cpp
