@@ -5,11 +5,9 @@
 
 #include "parser.hpp"
 
-#ifndef INDENTATION_SIZE
-#define INDENTATION_SIZE 4
-#endif
-#define MAX_LINE_LENGTH 80
-#define INDENTATION_CHAR ' '
+#define XML_INDENTATION_SIZE 4
+#define XML_MAX_LINE_LENGTH 80
+#define XML_INDENTATION_CHAR ' '
 
 /**
  * Get the formatted string representation of an XML tree.
