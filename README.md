@@ -42,7 +42,7 @@ Does not support the following:
 1. Install the necessary development tools:
    ```bash
    sudo apt-get update
-   sudo apt-get install build-essential cmake libboost-all-dev graphviz libqt6-dev
+   sudo apt-get install build-essential cmake libboost-all-dev graphviz qt6-base-dev
    ```
 
 #### Arch-based systems
