@@ -1,5 +1,10 @@
 # Ugly Duckling
 
+## Screenshots
+![draw screenshot](https://github.com/user-attachments/assets/de050ec6-62db-4ab6-97d2-3ec1d4ce0a61)
+![json GUI screenshot](https://github.com/user-attachments/assets/046180c4-3f8f-4dd6-bab5-e6c19b82bc96)
+
+
 ## Overview
 
 Ugly Duckling is a simple yet powerful multipurpose XML utility written in C++.
